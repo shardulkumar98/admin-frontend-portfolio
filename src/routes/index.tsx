@@ -2,7 +2,6 @@ import routes from "constant/routes";
 import { BrowserRouter, Routes as ReactRoutes, Route } from "react-router-dom";
 import PrivateRoute from "./private-route";
 import PublicRoute from "./public-route";
-// import Layout from "components/Layouts";
 
 const Routes = () => {
   return (
