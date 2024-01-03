@@ -19,7 +19,7 @@ const Login = () => {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<FormData>({
     // resolver: yupResolver(loginSchema),
     // defaultValues: {
@@ -28,10 +28,8 @@ const Login = () => {
     // },
   })
 
-  console.log('errors :>> ', errors)
-
   const onSubmit = (data: any) => {
-    console.log(data)
+    data
     localStorage.setItem('token', 'thisismytoken')
     navigate(`${DashboardRoute.path}`)
   }
