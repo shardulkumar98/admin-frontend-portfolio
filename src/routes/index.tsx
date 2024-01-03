@@ -8,15 +8,16 @@ const Routes = () => {
     <BrowserRouter>
       <ReactRoutes>
         {routes?.map((route, index) => {
-          const { component: Component, path, restricted, layout } = route;
+          const { component: Component, path, restricted } = route;
           return (
             <Route
               key={index}
               path={path}
               element={
-                restricted && layout ? (
-                  <PrivateRoute component={Component} />
-                ) : restricted ? (
+                // restricted && layout ? (
+                //   <PrivateRoute component={Component} />
+                // ) :
+                restricted ? (
                   <div>
                     <PrivateRoute component={Component} />
                   </div>

@@ -1,3 +1,4 @@
+import Dashboard from "pages/dashboard";
 import Login from "views/login";
 
 interface IRoute {
@@ -5,7 +6,7 @@ interface IRoute {
   restricted: boolean;
   component: () => any;
   exact: boolean;
-  layout?: boolean;
+  // layout?: boolean;
 }
 
 export const LoginRoute = {
@@ -13,9 +14,17 @@ export const LoginRoute = {
   path: "/",
   exact: true,
   restricted: false,
-  layout: false,
+  // layout: false,
 };
 
-const ROUTES: IRoute[] = [LoginRoute];
+export const DashboardRoute = {
+  component: Dashboard,
+  path: "/dashboard",
+  exact: true,
+  restricted: true,
+  // layout: false,
+};
+
+const ROUTES: IRoute[] = [LoginRoute, DashboardRoute];
 
 export default ROUTES;

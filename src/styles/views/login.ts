@@ -11,7 +11,7 @@ export const MainContainer = styled.div`
   background: #ffe7c1;
 `;
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +21,6 @@ export const Wrapper = styled.div`
   border: 2px solid ${themeColors.LIGHT_ORANGE};
   padding: 30px 20px;
   border-radius: 8px;
-  /* background: ${themeColors.WHITE}; */
 `;
 
 export const Heading = styled.div`
