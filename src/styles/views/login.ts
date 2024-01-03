@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { themeColors } from "theme/colors";
+import styled from 'styled-components'
+import { themeColors } from 'theme/colors'
 
 export const MainContainer = styled.div`
   display: flex;
@@ -9,7 +9,7 @@ export const MainContainer = styled.div`
   width: 100%;
   height: 100vh;
   background: #ffe7c1;
-`;
+`
 
 export const Wrapper = styled.form`
   display: flex;
@@ -21,12 +21,12 @@ export const Wrapper = styled.form`
   border: 2px solid ${themeColors.LIGHT_ORANGE};
   padding: 30px 20px;
   border-radius: 8px;
-`;
+`
 
 export const Heading = styled.div`
   font-size: 24px;
-`;
+`
 
 export const InputWrapper = styled.div`
   width: 100%;
-`;
+`

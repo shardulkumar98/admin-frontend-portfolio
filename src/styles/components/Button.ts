@@ -1,8 +1,8 @@
-import styled from "styled-components";
-import { themeColors } from "theme/colors";
+import styled from 'styled-components'
+import { themeColors } from 'theme/colors'
 
 interface IStyledButton {
-  variant?: "contained" | "text" | "outline";
+  variant?: 'contained' | 'text' | 'outline'
 }
 
 const getButtonStyles = ({ variant }: IStyledButton) => {
@@ -36,9 +36,9 @@ const getButtonStyles = ({ variant }: IStyledButton) => {
       background: ${themeColors.LIGHT_GREEN};
       color: ${themeColors.WHITE};
       border: none;
-  `;
+  `
   }
-};
+}
 
 export const StyledButton = styled.button<IStyledButton>`
   width: 100%;
@@ -50,4 +50,4 @@ export const StyledButton = styled.button<IStyledButton>`
   :hover {
     opacity: 0.5;
   }
-`;
+`

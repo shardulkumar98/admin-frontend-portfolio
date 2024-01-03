@@ -1,12 +1,12 @@
-import { Navigate } from "react-router-dom";
-import { isLogin } from "utils";
+import { Navigate } from 'react-router-dom'
+import { isLogin } from 'utils'
 
 const PrivateRoute = ({ component: RouteComponent }: any) => {
   if (isLogin()) {
-    return <RouteComponent />;
+    return <RouteComponent />
   }
 
-  return <Navigate to="/" />;
-};
+  return <Navigate to="/" />
+}
 
-export default PrivateRoute;
+export default PrivateRoute

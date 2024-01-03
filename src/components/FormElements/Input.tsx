@@ -1,19 +1,19 @@
-import React from "react";
-import { Form, Input } from "antd";
-import { Controller } from "react-hook-form";
+import React from 'react'
+import { Form, Input } from 'antd'
+import { Controller } from 'react-hook-form'
 interface ITextInputProps {
-  label?: string;
-  name: string;
-  rules?: any;
-  control: any;
-  placeholder?: string;
-  className?: string;
-  value?: string | number;
-  type?: string;
-  onBlur?: any;
-  autoComplete?: string;
-  disabled?: boolean;
-  onChange?: any;
+  label?: string
+  name: string
+  rules?: any
+  control: any
+  placeholder?: string
+  className?: string
+  value?: string | number
+  type?: string
+  onBlur?: any
+  autoComplete?: string
+  disabled?: boolean
+  onChange?: any
 }
 const TextInput: React.FC<ITextInputProps> = ({
   label,
@@ -36,8 +36,8 @@ const TextInput: React.FC<ITextInputProps> = ({
           value={value}
           onChange={(e) => onChange(e)}
           onBlur={() => {
-            onHookBlur();
-            if (onBlur) onBlur();
+            onHookBlur()
+            if (onBlur) onBlur()
           }}
           disabled={disabled}
           autoComplete={autoComplete}
@@ -48,9 +48,9 @@ const TextInput: React.FC<ITextInputProps> = ({
       name={name}
     />
   </Form.Item>
-);
+)
 
-export default TextInput;
+export default TextInput
 
 // import { Controller } from "react-hook-form";
 // import { Form, Input } from "antd";

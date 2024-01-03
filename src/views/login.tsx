@@ -1,25 +1,20 @@
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 // import * as Yup from "yup";
 // import { yupResolver } from "@hookform/resolvers/yup";
-import { DashboardRoute } from "constant/routes";
-import Button from "components/Button/Button";
-import TextInput from "components/FormElements/Input";
+import { DashboardRoute } from 'constant/routes'
+import Button from 'components/Button/Button'
+import TextInput from 'components/FormElements/Input'
 // import { loginSchema } from "validation";
-import {
-  MainContainer,
-  Wrapper,
-  Heading,
-  InputWrapper,
-} from "styles/views/login";
+import { MainContainer, Wrapper, Heading, InputWrapper } from 'styles/views/login'
 
 interface FormData {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 const Login = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const {
     control,
@@ -31,15 +26,15 @@ const Login = () => {
     //   email: "",
     //   password: "",
     // },
-  });
+  })
 
-  console.log("errors :>> ", errors);
+  console.log('errors :>> ', errors)
 
   const onSubmit = (data: any) => {
-    console.log(data);
-    localStorage.setItem("token", "thisismytoken");
-    navigate(`${DashboardRoute.path}`);
-  };
+    console.log(data)
+    localStorage.setItem('token', 'thisismytoken')
+    navigate(`${DashboardRoute.path}`)
+  }
 
   return (
     <MainContainer>
@@ -52,7 +47,7 @@ const Login = () => {
         <Button label="Submit" type="submit" />
       </Wrapper>
     </MainContainer>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login

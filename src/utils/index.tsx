@@ -1,7 +1,7 @@
 export const isLogin = () => {
-  if (localStorage.getItem("token")) {
-    return true;
+  if (localStorage.getItem('token')) {
+    return true
   }
 
-  return false;
-};
+  return false
+}
