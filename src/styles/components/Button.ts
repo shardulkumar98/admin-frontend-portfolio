@@ -33,7 +33,7 @@ const getButtonStyles = ({ variant }: IStyledButton) => {
     //   `;
     default:
       return `
-      background: ${themeColors.LIGHT_GREEN};
+      background: ${themeColors.ORANGE};
       color: ${themeColors.WHITE};
       border: none;
   `

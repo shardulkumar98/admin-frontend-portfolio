@@ -68,8 +68,10 @@ const Dashboard = () => {
   return (
     <MainContainer>
       <Heading>
-        <div>TITLE</div>
-        <div onClick={handleLogOut}>Log Out</div>
+        <div style={{ color: '#2D3250' }}>TITLE</div>
+        <div style={{ color: '#2D3250' }} onClick={handleLogOut}>
+          Log Out
+        </div>
       </Heading>
       <FormContainer>
         <FormWrapper>
