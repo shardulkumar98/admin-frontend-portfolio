@@ -2,11 +2,13 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 // import * as Yup from "yup";
 // import { yupResolver } from "@hookform/resolvers/yup";
-import { DashboardRoute } from 'constant/routes'
+// import { DashboardRoute } from 'constant/routes'
 import Button from 'components/Button/Button'
 import TextInput from 'components/FormElements/Input'
 // import { loginSchema } from "validation";
 import { MainContainer, Wrapper, Heading, InputWrapper } from 'styles/views/login'
+import usePost from 'hooks/usePost'
+import { APIS } from 'constant/apis'
 
 interface FormData {
   email: string
@@ -15,6 +17,9 @@ interface FormData {
 
 const Login = () => {
   const navigate = useNavigate()
+  navigate
+  // console.log('navigate :>> ', navigate)
+  const { mutateAsync } = usePost()
 
   const {
     control,
@@ -28,10 +33,20 @@ const Login = () => {
     // },
   })
 
-  const onSubmit = (data: any) => {
-    data
-    localStorage.setItem('token', 'thisismytoken')
-    navigate(`${DashboardRoute.path}`)
+  const onSubmit = async (data: any) => {
+    try {
+      const res = await mutateAsync({
+        url: `${APIS.LOGIN}`,
+        payload: data,
+      })
+      res
+      // console.log('res :>> ', res)
+    } catch (error) {
+      // console.log('error :>> ', error)
+    }
+    // data
+    // localStorage.setItem('token', 'thisismytoken')
+    // navigate(`${DashboardRoute.path}`)
   }
 
   return (
