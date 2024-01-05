@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 // import * as Yup from "yup";
 // import { yupResolver } from "@hookform/resolvers/yup";
-// import { DashboardRoute } from 'constant/routes'
+import { DashboardRoute } from 'constant/routes'
 import Button from 'components/Button/Button'
 import TextInput from 'components/FormElements/Input'
 // import { loginSchema } from "validation";
@@ -27,10 +27,6 @@ const Login = () => {
     // formState: { errors },
   } = useForm<FormData>({
     // resolver: yupResolver(loginSchema),
-    // defaultValues: {
-    //   email: "",
-    //   password: "",
-    // },
   })
 
   const onSubmit = async (data: any) => {
@@ -39,14 +35,13 @@ const Login = () => {
         url: `${APIS.LOGIN}`,
         payload: data,
       })
-      res
-      // console.log('res :>> ', res)
+      if (res) {
+        localStorage.setItem('token', res?.data?.token)
+        navigate(`${DashboardRoute.path}`)
+      }
     } catch (error) {
       // console.log('error :>> ', error)
     }
-    // data
-    // localStorage.setItem('token', 'thisismytoken')
-    // navigate(`${DashboardRoute.path}`)
   }
 
   return (
