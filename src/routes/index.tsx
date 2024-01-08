@@ -7,9 +7,11 @@ import 'react-toastify/dist/ReactToastify.css'
 import routes from 'constant/routes'
 import PrivateRoute from './private-route'
 import PublicRoute from './public-route'
+import { UserContext } from 'context/userInfo'
 
 const Routes = () => {
   const [isLoading, setIsLoading] = useState(false)
+  const [userInfo, setUserInfo] = useState({})
 
   const showError = (message: string) => {
     toast.error(message)
@@ -27,23 +29,6 @@ const Routes = () => {
           onError: async (error: any) => {
             setIsLoading(false)
             showError(error?.response?.data?.message)
-
-            // if (error.config.url === `/auth/user/${userId}`) {
-            //   showError(error?.response?.data?.error)
-            // } else if (error.response.status === 401 && error?.response?.data?.message === 'Concurrent Login') {
-            //   setModal(true)
-            // } else if (
-            //   error.response.status === 403 &&
-            //   error?.response?.data?.message === 'Your Access Has Been Changed Please Contact Admin'
-            // ) {
-            //   setAccessModal(true)
-            // } else {
-            //   if (error?.response?.data?.message === 'User does not exist ') {
-            //     showError(error?.response?.data?.message)
-            //   } else {
-            //     showError(error?.response?.data?.error)
-            //   }
-            // }
           },
           onSuccess: (data: any) => {
             setIsLoading(false)
@@ -73,32 +58,31 @@ const Routes = () => {
           <Spin size="large" />
         </div>
       )}
-      <ToastContainer />
-      <BrowserRouter>
-        <ReactRoutes>
-          {routes?.map((route, index) => {
-            const { component: Component, path, restricted } = route
-            return (
-              <Route
-                key={index}
-                path={path}
-                element={
-                  // restricted && layout ? (
-                  //   <PrivateRoute component={Component} />
-                  // ) :
-                  restricted ? (
-                    <div>
-                      <PrivateRoute component={Component} />
-                    </div>
-                  ) : (
-                    <PublicRoute restricted={false} component={Component} />
-                  )
-                }
-              />
-            )
-          })}
-        </ReactRoutes>
-      </BrowserRouter>
+      <UserContext.Provider value={{ userInfo, setUserInfo }}>
+        <ToastContainer />
+        <BrowserRouter>
+          <ReactRoutes>
+            {routes?.map((route, index) => {
+              const { component: Component, path, restricted } = route
+              return (
+                <Route
+                  key={index}
+                  path={path}
+                  element={
+                    restricted ? (
+                      <div>
+                        <PrivateRoute component={Component} />
+                      </div>
+                    ) : (
+                      <PublicRoute restricted={false} component={Component} />
+                    )
+                  }
+                />
+              )
+            })}
+          </ReactRoutes>
+        </BrowserRouter>
+      </UserContext.Provider>
     </QueryClientProvider>
   )
 }

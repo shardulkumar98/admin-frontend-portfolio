@@ -9,6 +9,8 @@ import TextInput from 'components/FormElements/Input'
 import { MainContainer, Wrapper, Heading, InputWrapper } from 'styles/views/login'
 import usePost from 'hooks/usePost'
 import { APIS } from 'constant/apis'
+import { useContext } from 'react'
+import { UserContext } from 'context/userInfo'
 
 interface FormData {
   email: string
@@ -17,9 +19,8 @@ interface FormData {
 
 const Login = () => {
   const navigate = useNavigate()
-  navigate
-  // console.log('navigate :>> ', navigate)
   const { mutateAsync } = usePost()
+  const { setUserInfo } = useContext(UserContext)
 
   const {
     control,
@@ -35,9 +36,10 @@ const Login = () => {
         url: `${APIS.LOGIN}`,
         payload: data,
       })
-      if (res) {
+      if (res?.data?.token) {
         localStorage.setItem('token', res?.data?.token)
         navigate(`${DashboardRoute.path}`)
+        setUserInfo(res?.data?.userInfo)
       }
     } catch (error) {
       // console.log('error :>> ', error)

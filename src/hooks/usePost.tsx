@@ -5,6 +5,7 @@ interface IParams {
   url: string
   payload?: any
   token?: boolean
+  formData?: any
 }
 
 const post = async ({ url, payload, token = true }: IParams) => {

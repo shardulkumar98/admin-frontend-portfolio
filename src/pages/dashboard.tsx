@@ -1,64 +1,82 @@
-import { useState } from 'react'
+import { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-// import { useForm } from 'react-hook-form'
-// import TextInput from "components/FormElements/Input"
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons'
-import { message, Upload } from 'antd'
-import type { UploadChangeParam } from 'antd/es/upload'
-import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface'
+import { useForm } from 'react-hook-form'
 import { LoginRoute } from 'constant/routes'
 import Button from 'components/Button/Button'
 import { MainContainer, Heading, FormContainer, FormWrapper, Title, TextWrapper } from 'styles/pages/dashboard'
-
-// eslint-disable-next-line no-unused-vars
-const getBase64 = (img: RcFile, callback: (url: string) => void) => {
-  const reader = new FileReader()
-  reader.addEventListener('load', () => callback(reader.result as string))
-  reader.readAsDataURL(img)
-}
-
-const beforeUpload = (file: RcFile) => {
-  const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png'
-  if (!isJpgOrPng) {
-    message.error('You can only upload JPG/PNG file!')
-  }
-  // const isLt2M = file.size / 1024 / 1024 < 2;
-  // if (!isLt2M) {
-  //   message.error('Image must smaller than 2MB!');
-  // }
-
-  // return isJpgOrPng && isLt2M
-  return isJpgOrPng
-}
+import { UserContext } from 'context/userInfo'
+import SelectField from 'components/Select'
+import UploadButton from 'components/UploadButton'
+import usePost from 'hooks/usePost'
+import { APIS } from 'constant/apis'
 
 const Dashboard = () => {
-  const [loading, setLoading] = useState(false)
-  const [imageUrl, setImageUrl] = useState<string>()
-  // const { control } = useForm()
-
+  // const [first, setfirst] = useState(second)
+  const { mutateAsync } = usePost()
+  const { userInfo } = useContext(UserContext)
   const navigate = useNavigate()
 
-  const handleChange: UploadProps['onChange'] = (info: UploadChangeParam<UploadFile>) => {
-    if (info.file.status === 'uploading') {
-      setLoading(true)
-      return
-    }
+  const { control, handleSubmit } = useForm()
 
-    if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      getBase64(info.file.originFileObj as RcFile, (url) => {
-        setLoading(false)
-        setImageUrl(url)
-      })
+  const customRequest = async (evt: any, keyName: string) => {
+    keyName
+    // const urlKeyName = `${keyName}`
+
+    // if (values?.[urlKeyName]) {
+    //   handleRemove(keyName)
+    // }
+
+    const formData = new FormData()
+    formData.append('image', evt?.file)
+
+    // const fileSizeInBytes = evt?.file?.size
+    // const fileSizeInMB = fileSizeInBytes / 1048576
+
+    const supportedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'video/mp4']
+    const isFileTypeSupported = supportedTypes.includes(evt?.file?.type)
+
+    if (isFileTypeSupported) {
+      try {
+        // evt.onProgress({ percent: 0 })
+        const response = await mutateAsync({
+          url: APIS.UPLOAD,
+          payload: formData,
+        })
+        response
+
+        // console.log('response', response)
+
+        // evt.onProgress({ percent: 100 })
+        // setValue(keyName, response?.data?.data?.url)
+        // clearErrors(keyName)
+
+        // const newUrl = { [urlKeyName]: response?.data?.data?.url }
+
+        // setUrls([...urls, newUrl])
+        // setIsPreviewed((prevState) => ({
+        //   ...prevState,
+        //   [keyName]: true,
+        // }))
+      } catch (err) {
+        err
+      }
+    } else {
+      // toast.error(
+      //   !isFileTypeSupported ? (
+      //     <ErrorMessageWrapper className="capitalize-first-letter">{`${evt?.file?.type.split(
+      //       '/',
+      //     )[1]} format is not supported`}</ErrorMessageWrapper>
+      //   ) : (
+      //     'File size is too large'
+      //   ),
+      // )
     }
   }
 
-  const uploadButton = (
-    <button style={{ border: 0, background: 'none' }} type="button">
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Upload</div>
-    </button>
-  )
+  const onSubmitUpload = (data: any) => {
+    // console.log('data', data)
+    data
+  }
 
   const handleLogOut = () => {
     localStorage.removeItem('token')
@@ -68,29 +86,39 @@ const Dashboard = () => {
   return (
     <MainContainer>
       <Heading>
-        <div style={{ color: '#2D3250' }}>TITLE</div>
+        <div style={{ color: '#2D3250' }}>{userInfo?.username}</div>
         <div style={{ color: '#2D3250' }} onClick={handleLogOut}>
           Log Out
         </div>
       </Heading>
       <FormContainer>
-        <FormWrapper>
+        <FormWrapper onSubmit={handleSubmit(onSubmitUpload)}>
           <TextWrapper>
+            <SelectField
+              options={[
+                { value: 'image', label: 'Image' },
+                { value: 'video', label: 'Video' },
+              ]}
+              placeholder="Select Category"
+              control={control}
+              name="category"
+            />
+
+            <SelectField
+              options={[
+                { value: 'potrait', label: 'Potrait' },
+                { value: 'landscape', label: 'Landscape' },
+                { value: 'nature', label: 'Nature' },
+              ]}
+              placeholder="Select Subcategory"
+              control={control}
+              name="subCategory"
+            />
+
             <Title>Add Files</Title>
-            {/* <TextInput name="image" type="file" control={control} /> */}
-            <Upload
-              name="avatar"
-              listType="picture-card"
-              className="avatar-uploader"
-              showUploadList={false}
-              action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-              beforeUpload={beforeUpload}
-              onChange={handleChange}
-            >
-              {imageUrl ? <img src={imageUrl} alt="avatar" style={{ width: '100%' }} /> : uploadButton}
-            </Upload>
+            <UploadButton customRequest={(e: any) => customRequest(e, 'test')} />
           </TextWrapper>
-          <Button label="upload" />
+          <Button label="upload" type="submit" />
         </FormWrapper>
       </FormContainer>
     </MainContainer>
