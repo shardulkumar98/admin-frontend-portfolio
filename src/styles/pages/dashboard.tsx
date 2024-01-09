@@ -37,6 +37,7 @@ export const FormWrapper = styled.form`
   max-width: 45vw;
   padding: 20px;
   border-radius: 8px;
+  gap: 25px;
   /* height: 30vh; */
 `
 export const TextWrapper = styled.div`

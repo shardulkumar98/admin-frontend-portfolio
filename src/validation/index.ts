@@ -1,8 +1,9 @@
 import * as yup from 'yup'
 
 export const loginSchema = yup
-  .object({
-    email: yup.string().required(),
-    password: yup.number().positive().integer().required(),
+  .object()
+  .shape({
+    email: yup.string().email().required(),
+    password: yup.string().required(),
   })
   .required()

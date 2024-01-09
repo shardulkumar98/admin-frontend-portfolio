@@ -30,11 +30,26 @@ export const Heading = styled.div`
 `
 
 export const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
   width: 100%;
 
   .ant-input {
     border: none;
     border-bottom: 1px solid ${themeColors.LIGHT_PURPLE};
-    /* background: none; */
   }
+  .ant-form-item {
+    margin: 0;
+  }
+`
+
+export const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`
+export const Error = styled.span`
+  color: ${themeColors.RED};
+  font-size: 12px;
 `

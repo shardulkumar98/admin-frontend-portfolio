@@ -37,16 +37,16 @@ const Dashboard = () => {
 
     if (isFileTypeSupported) {
       try {
-        // evt.onProgress({ percent: 0 })
+        evt.onProgress({ percent: 0 })
         const response = await mutateAsync({
           url: APIS.UPLOAD,
           payload: formData,
         })
-        response
 
+        response
         // console.log('response', response)
 
-        // evt.onProgress({ percent: 100 })
+        evt.onProgress({ percent: 100 })
         // setValue(keyName, response?.data?.data?.url)
         // clearErrors(keyName)
 
@@ -74,8 +74,8 @@ const Dashboard = () => {
   }
 
   const onSubmitUpload = (data: any) => {
-    // console.log('data', data)
     data
+    // console.log('data', data)
   }
 
   const handleLogOut = () => {
@@ -86,7 +86,7 @@ const Dashboard = () => {
   return (
     <MainContainer>
       <Heading>
-        <div style={{ color: '#2D3250' }}>{userInfo?.username}</div>
+        <div style={{ color: '#2D3250' }}>{userInfo?.username || 'Admin Portal'}</div>
         <div style={{ color: '#2D3250' }} onClick={handleLogOut}>
           Log Out
         </div>
@@ -116,7 +116,7 @@ const Dashboard = () => {
             />
 
             <Title>Add Files</Title>
-            <UploadButton customRequest={(e: any) => customRequest(e, 'test')} />
+            <UploadButton customRequest={(e: any) => customRequest(e, 'test')} multiple={true} />
           </TextWrapper>
           <Button label="upload" type="submit" />
         </FormWrapper>

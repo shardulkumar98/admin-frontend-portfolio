@@ -1,18 +1,18 @@
+import { useContext } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-// import * as Yup from "yup";
-// import { yupResolver } from "@hookform/resolvers/yup";
+// import * as Yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
 import { DashboardRoute } from 'constant/routes'
 import Button from 'components/Button/Button'
 import TextInput from 'components/FormElements/Input'
-// import { loginSchema } from "validation";
-import { MainContainer, Wrapper, Heading, InputWrapper } from 'styles/views/login'
+import { loginSchema } from 'validation'
 import usePost from 'hooks/usePost'
 import { APIS } from 'constant/apis'
-import { useContext } from 'react'
 import { UserContext } from 'context/userInfo'
+import { MainContainer, Wrapper, Heading, InputWrapper, InputContainer, Error } from 'styles/views/login'
 
-interface FormData {
+interface IData {
   email: string
   password: string
 }
@@ -25,9 +25,9 @@ const Login = () => {
   const {
     control,
     handleSubmit,
-    // formState: { errors },
-  } = useForm<FormData>({
-    // resolver: yupResolver(loginSchema),
+    formState: { errors },
+  } = useForm<IData>({
+    resolver: yupResolver(loginSchema),
   })
 
   const onSubmit = async (data: any) => {
@@ -38,6 +38,7 @@ const Login = () => {
       })
       if (res?.data?.token) {
         localStorage.setItem('token', res?.data?.token)
+        // localStorage.setItem('user', res?.data?.userInfo?.firstName)
         navigate(`${DashboardRoute.path}`)
         setUserInfo(res?.data?.userInfo)
       }
@@ -51,8 +52,14 @@ const Login = () => {
       <Wrapper onSubmit={handleSubmit(onSubmit)}>
         <Heading>Log In</Heading>
         <InputWrapper>
-          <TextInput placeholder="Email" name="email" control={control} />
-          <TextInput placeholder="Password" name="password" control={control} />
+          <InputContainer>
+            <TextInput placeholder="Email" name="email" control={control} />
+            <Error>{errors.email?.message}</Error>
+          </InputContainer>
+          <InputContainer>
+            <TextInput placeholder="Password" name="password" control={control} type="password" />
+            <Error>{errors?.password?.message}</Error>
+          </InputContainer>
         </InputWrapper>
         <Button label="Submit" type="submit" />
       </Wrapper>
