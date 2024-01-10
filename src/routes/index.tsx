@@ -8,6 +8,8 @@ import routes from 'constant/routes'
 import PrivateRoute from './private-route'
 import PublicRoute from './public-route'
 import { UserContext } from 'context/userInfo'
+import PrivateLayout from 'components/Layout/privateLayout'
+import PublicLayout from 'components/Layout/publicLayout'
 
 const Routes = () => {
   const [isLoading, setIsLoading] = useState(false)
@@ -70,11 +72,13 @@ const Routes = () => {
                   path={path}
                   element={
                     restricted ? (
-                      <div>
+                      <PrivateLayout>
                         <PrivateRoute component={Component} />
-                      </div>
+                      </PrivateLayout>
                     ) : (
-                      <PublicRoute restricted={false} component={Component} />
+                      <PublicLayout>
+                        <PublicRoute restricted={false} component={Component} />
+                      </PublicLayout>
                     )
                   }
                 />
