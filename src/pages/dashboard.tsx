@@ -6,7 +6,16 @@ import SelectField from 'components/Select'
 import UploadButton from 'components/UploadButton'
 import usePost from 'hooks/usePost'
 import { APIS } from 'constant/apis'
-import { MainContainer, FormContainer, FormWrapper, Title, TextWrapper, FileTitle } from 'styles/pages/dashboard'
+import {
+  MainContainer,
+  FormContainer,
+  FormWrapper,
+  Title,
+  TextWrapper,
+  FileTitle,
+  ImagesWrapper,
+} from 'styles/pages/dashboard'
+import DeleteIcon from 'assets/svg/delete'
 
 const Dashboard = () => {
   const [files, setFiles] = useState([{}])
@@ -69,6 +78,7 @@ const Dashboard = () => {
 
   return (
     <MainContainer>
+      <Title>Add Files</Title>
       <FormContainer>
         <FormWrapper onSubmit={handleSubmit(onSubmitUpload)}>
           <TextWrapper>
@@ -93,18 +103,23 @@ const Dashboard = () => {
               name="subCategory"
             />
 
-            <Title>Add Files</Title>
-            {/* <UploadButton customRequest={(e: any) => customRequest(e)} multiple={true} /> */}
-
             <UploadButton customRequest={customRequest} multiple={true} />
+
+            <ImagesWrapper>
+              {!files.slice(1).length ? (
+                <div>File Details</div>
+              ) : (
+                <ul>
+                  {files.slice(1).map((e: any, index) => {
+                    return <FileTitle key={index}>{e?.fileName}</FileTitle>
+                  })}
+                </ul>
+              )}
+            </ImagesWrapper>
+            <DeleteIcon />
           </TextWrapper>
-
-          {files.slice(1).map((e: any, index) => {
-            return <FileTitle key={index}>{e?.fileName}</FileTitle>
-          })}
-
-          <Button label="upload" type="submit" />
         </FormWrapper>
+        <Button label="upload" type="submit" />
       </FormContainer>
     </MainContainer>
   )

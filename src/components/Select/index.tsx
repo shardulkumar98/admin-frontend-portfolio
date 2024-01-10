@@ -20,6 +20,7 @@ interface SelectFieldProps {
   onChange?: any
   disabled?: boolean
   showSearch?: boolean
+  style?: any
 }
 
 const SelectField = ({
@@ -58,7 +59,6 @@ const SelectField = ({
               onChange(e)
               handleValue && handleValue(e)
             }}
-            style={{ width: '100%' }}
             mode={mode}
             value={value || undefined}
             options={selectOptions}
