@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useFieldArray, useForm } from 'react-hook-form'
 import Button from 'components/Button/Button'
@@ -17,18 +17,33 @@ import {
 } from 'styles/pages/dashboard'
 import DeleteIcon from 'assets/svg/delete'
 
+interface FormValues {
+  images: {
+    category: string
+    subCategory: string
+  }[]
+}
+
 const Dashboard = () => {
   const [files, setFiles] = useState([{}])
   const { mutateAsync } = usePost()
-  const { control, handleSubmit, reset } = useForm()
-  const { fields, append, remove } = useFieldArray({
+  const {
     control,
-    name: 'admin',
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      images: [{ category: '', subCategory: '' }],
+    },
+    mode: 'onBlur',
   })
 
-  useEffect(() => {
-    append({ category: '', subCategory: '' })
-  }, [])
+  errors
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'images',
+  })
 
   const customRequest = async (evt: any) => {
     const formData = new FormData()
@@ -60,21 +75,26 @@ const Dashboard = () => {
     }
   }
 
-  const onSubmitUpload = async (data: any) => {
+  const onSubmitUpload = async (data: FormValues) => {
+    const customPayload = data?.images.map((ele: any) => {
+      return {
+        category: ele.category,
+        files: [
+          {
+            subCategory: ele.subCategory,
+            fileDetails: files.slice(1),
+          },
+        ],
+      }
+    })
+
     try {
       const response = await mutateAsync({
         url: `${APIS.UPLOAD_IMAGES_DETAILS}`,
         payload: {
-          category: data.category,
-          files: [
-            {
-              subCategory: data.subCategory,
-              fileDetails: files.slice(1),
-            },
-          ],
+          images: customPayload,
         },
       })
-
       if (response) {
         reset()
         setFiles([{}])
@@ -98,7 +118,7 @@ const Dashboard = () => {
                 ]}
                 placeholder="Select Category"
                 control={control}
-                name={`admin.${index}.category`}
+                name={`images.${index}.category` as const}
               />
 
               <SelectField
@@ -109,7 +129,7 @@ const Dashboard = () => {
                 ]}
                 placeholder="Select Subcategory"
                 control={control}
-                name={`admin.${index}.subCategory`}
+                name={`images.${index}.subCategory` as const}
               />
 
               <UploadButton customRequest={customRequest} multiple={true} />
@@ -128,8 +148,8 @@ const Dashboard = () => {
               <DeleteIcon onClick={() => remove(index)} />
             </TextWrapper>
           ))}
+          <Button label="upload" type="submit" />
         </FormWrapper>
-        <Button label="upload" type="submit" />
       </FormContainer>
     </MainContainer>
   )
