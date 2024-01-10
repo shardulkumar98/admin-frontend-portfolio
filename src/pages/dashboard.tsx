@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import Button from 'components/Button/Button'
 import SelectField from 'components/Select'
 import UploadButton from 'components/UploadButton'
@@ -21,6 +21,14 @@ const Dashboard = () => {
   const [files, setFiles] = useState([{}])
   const { mutateAsync } = usePost()
   const { control, handleSubmit, reset } = useForm()
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'admin',
+  })
+
+  useEffect(() => {
+    append({ category: '', subCategory: '' })
+  }, [])
 
   const customRequest = async (evt: any) => {
     const formData = new FormData()
@@ -78,46 +86,48 @@ const Dashboard = () => {
 
   return (
     <MainContainer>
-      <Title>Add Files</Title>
+      <Title onClick={() => append({ category: '', subCategory: '' })}>Add More</Title>
       <FormContainer>
         <FormWrapper onSubmit={handleSubmit(onSubmitUpload)}>
-          <TextWrapper>
-            <SelectField
-              options={[
-                { value: 'image', label: 'Image' },
-                { value: 'video', label: 'Video' },
-              ]}
-              placeholder="Select Category"
-              control={control}
-              name="category"
-            />
+          {fields.map((item, index) => (
+            <TextWrapper key={item?.id}>
+              <SelectField
+                options={[
+                  { value: 'image', label: 'Image' },
+                  { value: 'video', label: 'Video' },
+                ]}
+                placeholder="Select Category"
+                control={control}
+                name={`admin.${index}.category`}
+              />
 
-            <SelectField
-              options={[
-                { value: 'potrait', label: 'Potrait' },
-                { value: 'landscape', label: 'Landscape' },
-                { value: 'nature', label: 'Nature' },
-              ]}
-              placeholder="Select Subcategory"
-              control={control}
-              name="subCategory"
-            />
+              <SelectField
+                options={[
+                  { value: 'potrait', label: 'Potrait' },
+                  { value: 'landscape', label: 'Landscape' },
+                  { value: 'nature', label: 'Nature' },
+                ]}
+                placeholder="Select Subcategory"
+                control={control}
+                name={`admin.${index}.subCategory`}
+              />
 
-            <UploadButton customRequest={customRequest} multiple={true} />
+              <UploadButton customRequest={customRequest} multiple={true} />
 
-            <ImagesWrapper>
-              {!files.slice(1).length ? (
-                <div>File Details</div>
-              ) : (
-                <ul>
-                  {files.slice(1).map((e: any, index) => {
-                    return <FileTitle key={index}>{e?.fileName}</FileTitle>
-                  })}
-                </ul>
-              )}
-            </ImagesWrapper>
-            <DeleteIcon />
-          </TextWrapper>
+              <ImagesWrapper>
+                {!files.slice(1).length ? (
+                  <div>File Details</div>
+                ) : (
+                  <ul>
+                    {files.slice(1).map((e: any, index) => {
+                      return <FileTitle key={index}>{e?.fileName}</FileTitle>
+                    })}
+                  </ul>
+                )}
+              </ImagesWrapper>
+              <DeleteIcon onClick={() => remove(index)} />
+            </TextWrapper>
+          ))}
         </FormWrapper>
         <Button label="upload" type="submit" />
       </FormContainer>
