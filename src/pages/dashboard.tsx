@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import Button from 'components/Button/Button'
 import SelectField from 'components/Select'
 import UploadButton from 'components/UploadButton'
@@ -17,10 +17,33 @@ import {
 } from 'styles/pages/dashboard'
 import DeleteIcon from 'assets/svg/delete'
 
+interface FormValues {
+  images: {
+    category: string
+    subCategory: string
+  }[]
+}
+
 const Dashboard = () => {
   const [files, setFiles] = useState([{}])
   const { mutateAsync } = usePost()
-  const { control, handleSubmit, reset } = useForm()
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      images: [{ category: '', subCategory: '' }],
+    },
+    mode: 'onBlur',
+  })
+
+  errors
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'images',
+  })
 
   const customRequest = async (evt: any) => {
     const formData = new FormData()
@@ -52,21 +75,26 @@ const Dashboard = () => {
     }
   }
 
-  const onSubmitUpload = async (data: any) => {
+  const onSubmitUpload = async (data: FormValues) => {
+    const customPayload = data?.images.map((ele: any) => {
+      return {
+        category: ele.category,
+        files: [
+          {
+            subCategory: ele.subCategory,
+            fileDetails: files.slice(1),
+          },
+        ],
+      }
+    })
+
     try {
       const response = await mutateAsync({
         url: `${APIS.UPLOAD_IMAGES_DETAILS}`,
         payload: {
-          category: data.category,
-          files: [
-            {
-              subCategory: data.subCategory,
-              fileDetails: files.slice(1),
-            },
-          ],
+          images: customPayload,
         },
       })
-
       if (response) {
         reset()
         setFiles([{}])
@@ -78,48 +106,50 @@ const Dashboard = () => {
 
   return (
     <MainContainer>
-      <Title>Add Files</Title>
+      <Title onClick={() => append({ category: '', subCategory: '' })}>Add More</Title>
       <FormContainer>
         <FormWrapper onSubmit={handleSubmit(onSubmitUpload)}>
-          <TextWrapper>
-            <SelectField
-              options={[
-                { value: 'image', label: 'Image' },
-                { value: 'video', label: 'Video' },
-              ]}
-              placeholder="Select Category"
-              control={control}
-              name="category"
-            />
+          {fields.map((item, index) => (
+            <TextWrapper key={item?.id}>
+              <SelectField
+                options={[
+                  { value: 'image', label: 'Image' },
+                  { value: 'video', label: 'Video' },
+                ]}
+                placeholder="Select Category"
+                control={control}
+                name={`images.${index}.category` as const}
+              />
 
-            <SelectField
-              options={[
-                { value: 'potrait', label: 'Potrait' },
-                { value: 'landscape', label: 'Landscape' },
-                { value: 'nature', label: 'Nature' },
-              ]}
-              placeholder="Select Subcategory"
-              control={control}
-              name="subCategory"
-            />
+              <SelectField
+                options={[
+                  { value: 'potrait', label: 'Potrait' },
+                  { value: 'landscape', label: 'Landscape' },
+                  { value: 'nature', label: 'Nature' },
+                ]}
+                placeholder="Select Subcategory"
+                control={control}
+                name={`images.${index}.subCategory` as const}
+              />
 
-            <UploadButton customRequest={customRequest} multiple={true} />
+              <UploadButton customRequest={customRequest} multiple={true} />
 
-            <ImagesWrapper>
-              {!files.slice(1).length ? (
-                <div>File Details</div>
-              ) : (
-                <ul>
-                  {files.slice(1).map((e: any, index) => {
-                    return <FileTitle key={index}>{e?.fileName}</FileTitle>
-                  })}
-                </ul>
-              )}
-            </ImagesWrapper>
-            <DeleteIcon />
-          </TextWrapper>
+              <ImagesWrapper>
+                {!files.slice(1).length ? (
+                  <div>File Details</div>
+                ) : (
+                  <ul>
+                    {files.slice(1).map((e: any, index) => {
+                      return <FileTitle key={index}>{e?.fileName}</FileTitle>
+                    })}
+                  </ul>
+                )}
+              </ImagesWrapper>
+              <DeleteIcon onClick={() => remove(index)} />
+            </TextWrapper>
+          ))}
+          <Button label="upload" type="submit" />
         </FormWrapper>
-        <Button label="upload" type="submit" />
       </FormContainer>
     </MainContainer>
   )

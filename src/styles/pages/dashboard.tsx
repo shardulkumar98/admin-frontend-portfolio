@@ -23,16 +23,18 @@ export const FormWrapper = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 1px solid ${themeColors.LIGHT_PURPLE};
   width: 100%;
   padding: 20px;
-  border-radius: 8px;
   gap: 25px;
 `
 export const TextWrapper = styled.div`
   display: flex;
   justify-content: space-around;
   gap: 8px;
+  border: 1px solid ${themeColors.LIGHT_PURPLE};
+  width: 100%;
+  padding: 20px;
+  border-radius: 8px;
 
   .ant-select {
     width: 200px;
