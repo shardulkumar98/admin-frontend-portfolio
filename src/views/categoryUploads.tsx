@@ -1,7 +1,7 @@
 import React from 'react'
 
 const CategoryUploads = () => {
-  return <div>CategoryUploads</div>
+  return <div>Coming Soon!</div>
 }
 
 export default CategoryUploads

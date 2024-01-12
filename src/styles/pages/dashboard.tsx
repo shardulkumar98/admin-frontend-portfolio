@@ -9,6 +9,8 @@ export const MainContainer = styled.div`
   height: 80vh;
   gap: 10px;
   padding: 20px;
+  background-color: ${themeColors.CREAMY_WHITE};
+  height: 90vh;
 `
 export const FormContainer = styled.div`
   width: 100%;
