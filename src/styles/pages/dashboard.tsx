@@ -40,7 +40,13 @@ export const TextWrapper = styled.div`
     width: 200px;
   }
 `
-export const Title = styled.div``
+export const AddMoreWrapper = styled.div`
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  width: 100%;
+  padding: 0 25px;
+`
 
 export const FileTitle = styled.li`
   font-size: 12px;

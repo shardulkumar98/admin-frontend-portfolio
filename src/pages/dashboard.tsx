@@ -1,21 +1,24 @@
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useFieldArray, useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 import Button from 'components/Button/Button'
 import SelectField from 'components/Select'
 import UploadButton from 'components/UploadButton'
 import usePost from 'hooks/usePost'
 import { APIS } from 'constant/apis'
+import DeleteIcon from 'assets/svg/delete'
+import AddMoreIcon from 'assets/svg/addMore'
 import {
   MainContainer,
   FormContainer,
   FormWrapper,
-  Title,
+  AddMoreWrapper,
   TextWrapper,
   FileTitle,
   ImagesWrapper,
 } from 'styles/pages/dashboard'
-import DeleteIcon from 'assets/svg/delete'
+import { UploadSchema } from 'validation'
 
 interface FormValues {
   images: {
@@ -37,6 +40,7 @@ const Dashboard = () => {
       images: [{ category: '', subCategory: '' }],
     },
     mode: 'onBlur',
+    resolver: yupResolver(UploadSchema),
   })
 
   errors
@@ -106,7 +110,9 @@ const Dashboard = () => {
 
   return (
     <MainContainer>
-      <Title onClick={() => append({ category: '', subCategory: '' })}>Add More</Title>
+      <AddMoreWrapper>
+        <AddMoreIcon onClick={() => append({ category: '', subCategory: '' })} />
+      </AddMoreWrapper>
       <FormContainer>
         <FormWrapper onSubmit={handleSubmit(onSubmitUpload)}>
           {fields.map((item, index) => (
