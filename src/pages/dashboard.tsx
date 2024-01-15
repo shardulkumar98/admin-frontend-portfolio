@@ -27,6 +27,8 @@ interface FormValues {
   }[]
 }
 
+const CHUNK_SIZE = 1024 * 1024
+
 const Dashboard = () => {
   const [files, setFiles] = useState([{}])
   const { mutateAsync } = usePost()
@@ -49,6 +51,24 @@ const Dashboard = () => {
     name: 'images',
   })
 
+  const uploadChunk = async (file: any, start: any, end: any) => {
+    const chunk = file.slice(start, end)
+    const formData = new FormData()
+    formData.append('image', chunk)
+
+    try {
+      const response = await mutateAsync({
+        url: APIS.UPLOAD,
+        payload: formData,
+      })
+
+      const newUrl = response?.data
+      setFiles((prevFiles) => [...prevFiles, ...newUrl])
+    } catch (err) {
+      err
+    }
+  }
+
   const customRequest = async (evt: any) => {
     const formData = new FormData()
     formData.append('image', evt?.file)
@@ -57,16 +77,29 @@ const Dashboard = () => {
     const isFileTypeSupported = supportedTypes.includes(evt?.file?.type)
 
     if (isFileTypeSupported) {
-      try {
-        const response = await mutateAsync({
-          url: APIS.UPLOAD,
-          payload: formData,
-        })
+      // try {
+      //   const response = await mutateAsync({
+      //     url: APIS.UPLOAD,
+      //     payload: formData,
+      //   })
 
-        const newUrl = response?.data
-        setFiles((pre) => [...pre, ...newUrl])
+      //   const newUrl = response?.data
+      //   setFiles((pre) => [...pre, ...newUrl])
+      // } catch (err) {
+      //   err
+      // }
+      try {
+        const totalSize = evt?.file.size
+        let start = 0
+        let end = Math.min(CHUNK_SIZE, totalSize)
+
+        while (start < totalSize) {
+          await uploadChunk(evt?.file, start, end)
+          start = end
+          end = Math.min(start + CHUNK_SIZE, totalSize)
+        }
       } catch (err) {
-        err
+        // Handle errors as needed, maybe show a toast
       }
     } else {
       toast.error(

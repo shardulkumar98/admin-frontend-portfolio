@@ -2,6 +2,7 @@
   "name": "my-app",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://portfolio-backend-personal.vercel.app",
   "dependencies": {
     "@commitlint/config-conventional": "^18.4.3",
     "@hookform/resolvers": "^3.3.4",
